@@ -1,10 +1,10 @@
-# name: Update version and upload bundle.js to S3 to x.y.z.js & latest.js
+name: Update version and upload bundle.js to S3 to x.y.z.js & latest.js
 
-# on:
-#   pull_request:
-#     types: [closed]
-#     branches:
-#       - main
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
 
 # jobs:
 #   deploy:
