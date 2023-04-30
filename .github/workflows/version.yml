@@ -12,15 +12,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # - name: Set git name and email
-      #   run: |
-      #         git config --global user.email "dariadavydenko98@gmail.com"
-      #         git config --global user.name "ya-ya-it"
-
-      - name: Set tag to 1.0.0
+    - name: Set Git user information
         run: |
-          git tag -a v1.0.0 -m "Version 1.0.0"
-          git push --tags
+          git config --global user.name "ya-ya-it"
+          git config --global user.email "dariadavydenko98@gmail.com"
+
+    - name: Set tag to 1.0.0
+      run: |
+        git tag -a v1.0.0 -m "Version 1.0.0"
+        git push --tags
       # - name: Get last version tag
       #   run: |
       #     LAST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
