@@ -1,0 +1,46 @@
+name: Update Version Tag
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set tag to 1.0.0
+        run: |
+          git tag -a v1.0.0 -m "Version 1.0.0"
+          git push --tags
+      # - name: Get last version tag
+      #   run: |
+      #     LAST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+      #     echo "::set-output name=last_tag::$LAST_TAG"
+      #   id: get_last_tag
+      # - name: Determine version bump
+      #   run: |
+      #     COMMIT_MSG=$(git log --format=%B -n 1 ${{ github.sha }})
+      #     if [[ $COMMIT_MSG == release:* ]]; then
+      #       VERSION_BUMP="major"
+      #     elif [[ $COMMIT_MSG == feat:* ]]; then
+      #       VERSION_BUMP="minor"
+      #     elif [[ $COMMIT_MSG == fix:* || $COMMIT_MSG == bug:* ]]; then
+      #       VERSION_BUMP="patch"
+      #     else
+      #       VERSION_BUMP=""
+      #     fi
+      #     echo "::set-output name=version_bump::$VERSION_BUMP"
+      #   id: determine_version_bump
+      # - name: Set new version tag
+      #   if: steps.determine_version_bump.outputs.version_bump != ''
+      #   run: |
+      #     NEW_TAG=$(echo "${{ steps.get_last_tag.outputs.last_tag }}" | awk -F. -v bump="${{ steps.determine_version_bump.outputs.version_bump }}" '{OFS="."; $bump = $bump + 1; for (i = bump + 1; i <= NF; i++) $i = 0; print}')
+      #     echo "::set-output name=new_tag::$NEW_TAG"
+      # - name: Tag the commit with the new version
+      #   if: steps.set_new_tag.outputs.new_tag != ''
+      #   run: |
+      #     git tag ${{ steps.set_new_tag.outputs.new_tag }}
+      #     git push --tags
