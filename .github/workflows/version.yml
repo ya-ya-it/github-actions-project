@@ -32,6 +32,7 @@ jobs:
               repo: context.repo.repo
             });
             console.log(res.data.tag_name);
+            echo "result=${{ res.data.tag_name#i- }}" >> "$GITHUB_OUTPUT"
 
       - name: Echo Latest Release Tag
         run: |
