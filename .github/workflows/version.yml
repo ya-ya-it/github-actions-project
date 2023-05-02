@@ -34,7 +34,8 @@ jobs:
             console.log(res.data.tag_name);
 
       - name: Echo Latest Release Tag
-        run: echo "Latest Release Tag: ${{ steps.latest-tag.outputs.result }}"
+        run: |
+          echo "Latest Release Tag: ${{ steps.latest-tag.outputs.result }}"
 
       # - name: Update version
       #   id: get-latest-tag
