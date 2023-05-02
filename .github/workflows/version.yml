@@ -32,7 +32,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo
             });
-            return { result: res.data.tag_name }
+            return res.data.tag_name
 
       - name: Echo Latest Release Tag
         run: |
