@@ -12,23 +12,45 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           cache: npm
           node-version: 18
+
       - name: Install dependencies
         run: npm ci
+
       - name: Update version
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload latest.js to S3
+
+      # - name: Build code
+      #   run: npm run build
+
+
+      - name: Sync latest.js file to S3
         uses: jakejarvis/s3-sync-action@master
         with:
-          args: --acl public-read --delete --exclude '*' --include 'hello_world.rb'
+          args: --acl public-read --follow-symlinks --delete
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'ca-central-1'
+          SRC_DIR: hello_world.rb
+          DEST_DIR: hello_world.rb
+
+      - name: Sync versioned file to S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'ca-central-1'
+          SRC_DIR: hello_world.rb
+          DEST_DIR: ${{ env.VERSION }}.js
