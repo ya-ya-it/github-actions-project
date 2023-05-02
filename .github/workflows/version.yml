@@ -22,11 +22,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Update version
-        id: get-latest-tag
-        run: npx semantic-release 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get Latest Release Tag
+        id: latest-tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const res = await github.rest.repos.getLatestRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            console.log(res.data.tag_name);
+
+      - name: Echo Latest Release Tag
+        run: echo "Latest Release Tag: ${{ steps.latest-tag.outputs.result }}"
+
+      # - name: Update version
+      #   id: get-latest-tag
+      #   run: npx semantic-release 
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       # - name: Build code
       #   run: npm run build
