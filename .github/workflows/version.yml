@@ -36,7 +36,7 @@ jobs:
 
       - name: Echo Latest Release Tag
         run: |
-          echo "Latest Release Tag: ${{ steps.latest-tag.outputs.result }}"
+          echo "Latest Release Tag: ${{ steps.latest-tag.outputs.result#v- }}"
 
       # - name: Update version
       #   id: get-latest-tag
