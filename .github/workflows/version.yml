@@ -28,10 +28,11 @@ jobs:
         with:
           result-encoding: string
           script: |
-            github.rest.repos.getLatestRelease({
+            const res = await github.rest.repos.getLatestRelease({
               owner: context.repo.owner,
               repo: context.repo.repo
             });
+            return { result: res.data.tag_name }
 
       - name: Echo Latest Release Tag
         run: |
