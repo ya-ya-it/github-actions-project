@@ -28,7 +28,7 @@ jobs:
 
       - name: Echo Latest Release Tag
         run: |
-          echo "Latest Release Tag: ${{ steps.package-version.outputs.result }}"
+          echo "Latest Release Tag: ${{ steps.package-version.outputs }}"
 
 
 
