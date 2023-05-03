@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+       # - name: Build code
+      #   run: npm run build
+
       # - name: Update version
       #   id: get-latest-tag
       #   run: npx semantic-release 
@@ -32,11 +35,8 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
-      # - name: Build code
-      #   run: npm run build
-
       - name: Rename file
-        run: mv hello_world.rb test.rb
+        run: mv hello_world.rb ${{ steps.latest-tag.outputs.result }}.rb
 
 
 
