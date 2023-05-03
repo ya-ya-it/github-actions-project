@@ -22,72 +22,41 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
-
-      - name: Echo Latest Release Tag
-        run: |
-          echo "Latest Release Tag: ${{ steps.package-version.outputs.current-version }}"
-
-
-
-
-      # - name: Get Latest Release Tag
-      #   id: latest-tag
-      #   uses: actions/github-script@v6
-      #   with:
-      #     result-encoding: string
-      #     script: |
-      #       const res = await github.rest.repos.getLatestRelease({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo
-      #       });
-      #       return res.data.tag_name
-
-      # - name: Echo Latest Release Tag
-      #   run: |
-      #     echo "Latest Release Tag: ${{ steps.latest-tag.outputs.result }}"
-
       # - name: Update version
       #   id: get-latest-tag
       #   run: npx semantic-release 
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get Latest Release Version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       # - name: Build code
       #   run: npm run build
 
 
 
-      # - name: Sync latest.js file to S3
-      #   uses: jakejarvis/s3-sync-action@master
-      #   with:
-      #     args: --acl public-read --follow-symlinks --delete --exclude '*' --include 'hello_world.rb'
-      #   env:
-      #     AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     AWS_REGION: 'ca-central-1'
-      #     DEST_DIR: hello_world.rb
+      - name: Sync latest.js file to S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks --delete --exclude '*' --include 'hello_world.rb'
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'ca-central-1'
+          DEST_DIR: hello_world.rb
 
-      # - name: GitHub Tag Name example
-      #   id: get-latest-tag
-      #   run: |
-      #    echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-      #    echo "Tag name from github.ref_name: ${{  github.ref_name }}"
-
-      # - name: Upload to S3
-      #   uses: jakejarvis/s3-sync-action@master
-      #   with:
-      #     args: --acl public-read --follow-symlinks --delete --exclude '*' --include 'hello_world.rb'
-      #   env:
-      #     AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     AWS_REGION: 'ca-central-1'
-      #     DEST_DIR: ${{ steps.get-latest-tag.outputs.result }}.js
+      - name: Upload to S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks --delete --exclude '*' --include 'hello_world.rb' s3://dasha-storage/latest.js
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'ca-central-1'
 
 
       
@@ -114,3 +83,29 @@ jobs:
       #     AWS_REGION: 'ca-central-1'
       #     SRC_DIR: hello_world.rb
       #     DEST_DIR: ${{ env.VERSION }}.js
+
+
+
+
+
+
+
+      # - name: Echo Latest Release Tag
+      #   run: |
+      #     echo "Latest Release Tag: ${{ steps.package-version.outputs.current-version }}"
+
+      # - name: Get Latest Release Tag
+      #   id: latest-tag
+      #   uses: actions/github-script@v6
+      #   with:
+      #     result-encoding: string
+      #     script: |
+      #       const res = await github.rest.repos.getLatestRelease({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo
+      #       });
+      #       return res.data.tag_name
+
+      # - name: Echo Latest Release Tag
+      #   run: |
+      #     echo "Latest Release Tag: ${{ steps.latest-tag.outputs.result }}"
