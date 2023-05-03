@@ -18,26 +18,40 @@ jobs:
         with:
           cache: npm
           node-version: 18
+        run: echo ::set-output name=content::$(cat package.json)
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Get Latest Release Tag
-        id: latest-tag
-        uses: actions/github-script@v6
+      - name: Extract version from package.json
+        id: version
+        uses: mattallty/Read-File-Contents@v1
         with:
-          result-encoding: string
-          script: |
-            const res = await github.rest.repos.getLatestRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-            return res.data.tag_name
-
-      - name: Echo Latest Release Tag
+          path: package.json
         run: |
-          myString=${steps.latest-tag.outputs.result#?}
-          echo "Latest Release Tag: ${myString}"
+          echo "$INPUT_CONTENT" | jq -r '.version' > version.txt
+          echo ::set-output name=version::$(cat version.txt)
+
+      - name: Display package version
+        run: echo "Package Version: ${{ steps.version.outputs.version }}"
+
+
+
+      # - name: Get Latest Release Tag
+      #   id: latest-tag
+      #   uses: actions/github-script@v6
+      #   with:
+      #     result-encoding: string
+      #     script: |
+      #       const res = await github.rest.repos.getLatestRelease({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo
+      #       });
+      #       return res.data.tag_name
+
+      # - name: Echo Latest Release Tag
+      #   run: |
+      #     echo "Latest Release Tag: ${{ steps.latest-tag.outputs.result }}"
 
       # - name: Update version
       #   id: get-latest-tag
