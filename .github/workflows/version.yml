@@ -36,7 +36,7 @@ jobs:
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: Rename file
-        run: mv hello_world.rb ${{ steps.latest-tag.outputs.result }}.rb
+        run: mv hello_world.rb ${{ steps.package-version.outputs.current-version }}.rb
 
 
 
