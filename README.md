@@ -1,4 +1,4 @@
-# a1-webflow-widget-events
+# webflow-widget-events
 
 ## CLI Commands
 
